@@ -1,9 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 
 function TarefaLista(props) {
-    const titulo = props.title;
-    const dados = props.data;
+    // const titulo = props.title;
+    // const dados = props.data;
     const {title, data} = props;
     console.log(props)
     return (
@@ -20,11 +20,17 @@ function TarefaLista(props) {
 }
 
 const Tarefa = (propriedades) => {
-  return (<div>
+  return (<form onSubmit={propriedades.onSubmit}>
     <p>{propriedades.title}</p>
-    <input type="text" value={propriedades.text} onChange={propriedades.onChange}/>
-    <button type="submit">Criar nova tarefa</button>
-  </div>);
+    <input
+      type="text" 
+      value={propriedades.text} 
+      onChange={propriedades.onChange}
+    />
+    <button type="submit">
+        Criar nova tarefa
+    </button>
+  </form>);
 }
 
 class App extends React.Component {
@@ -45,14 +51,35 @@ class App extends React.Component {
     this.setState({text});
   }
 
+  handleChangeText(texto) {
+    this.setState({text: texto})
+  }
+
+  addTask() {
+    const {tarefas, text} = this.state;
+    tarefas.push(text);
+    this.setState({
+      tarefas: tarefas,
+      text: "Texto da nova tarefa"
+    })
+  }
+
   render() {
     return (
       <div>
-        <TarefaLista data={this.state.tarefas} title="Minha lista de tarefas" />
+        <TarefaLista 
+          data={this.state.tarefas} 
+          title="Minha lista de tarefas" 
+        />
         <Tarefa 
           title="Nova tarefa" 
-          text={this.state.text} 
-          onChange={(text) => this.onChangeText(text)} />
+          text={this.state.text}
+          onChange={(event) => this.handleChangeText(event.target.value)}
+          onSubmit={(event) => {
+            event.preventDefault();
+            this.addTask();
+          }}
+        />
       </div>
     );
   }
